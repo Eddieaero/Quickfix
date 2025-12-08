@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  quickfix-server:
+    build: .
+    container_name: quickfix-test-server
+    ports:
+      - "9878:9878"
+    volumes:
+      - ./server.cfg:/app/server.cfg
+      - ./server.py:/app/server.py
+    environment:
+      - PYTHONUNBUFFERED=1
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
