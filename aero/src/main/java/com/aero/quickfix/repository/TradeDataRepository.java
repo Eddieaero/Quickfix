@@ -21,7 +21,7 @@ public class TradeDataRepository {
         
         // Keep history bounded
         if (tradeHistory.size() > MAX_HISTORY_SIZE) {
-            tradeHistory.remove(0);
+            tradeHistory.removeFirst();
         }
     }
 
