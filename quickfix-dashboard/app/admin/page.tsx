@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Users, Trash2, Edit2, Power, CheckCircle, XCircle, Plus } from 'lucide-react'
+import { Users, Trash2, Power, CheckCircle, XCircle, Plus } from 'lucide-react'
 import axios from 'axios'
 
 interface User {
@@ -27,7 +27,6 @@ export default function UserManagementPage() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [currentUsername, setCurrentUsername] = useState('')
 
   // Form state for new user
   const [showNewUserForm, setShowNewUserForm] = useState(false)
@@ -46,7 +45,6 @@ export default function UserManagementPage() {
     }
 
     setIsAuthenticated(true)
-    setCurrentUsername(username)
     loadUsers()
   }, [])
 

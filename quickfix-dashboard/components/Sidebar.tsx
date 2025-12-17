@@ -11,6 +11,9 @@ import {
   X,
   Activity,
   Settings,
+  TrendingUp,
+  Calculator,
+  BarChart3,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -28,6 +31,24 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
       href: '/',
       icon: Activity,
       description: 'Real-time trading view',
+    },
+    {
+      name: 'Portfolios',
+      href: '/investments',
+      icon: TrendingUp,
+      description: 'Manage investments',
+    },
+    {
+      name: 'Market Data',
+      href: '/market',
+      icon: BarChart3,
+      description: 'Live market prices',
+    },
+    {
+      name: 'Compound Interest',
+      href: '/compound-interest',
+      icon: Calculator,
+      description: 'Calculate returns',
     },
     {
       name: 'Users',
