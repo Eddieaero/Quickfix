@@ -1,22 +1,37 @@
 package com.aero.quickfix.dto;
 
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * EODHD End-of-Day price data response.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EodhPriceResponse {
     private String date;
-    private BigDecimal open;
-    private BigDecimal high;
-    private BigDecimal low;
-    private BigDecimal close;
-    private BigDecimal adjustedClose;
+    
+    @JsonProperty("open")
+    private Double open;
+    
+    @JsonProperty("high")
+    private Double high;
+    
+    @JsonProperty("low")
+    private Double low;
+    
+    @JsonProperty("close")
+    private Double close;
+    
+    @JsonProperty("adjusted_close")
+    private Double adjustedClose;
+    
+    @JsonProperty("volume")
     private Long volume;
 
     public EodhPriceResponse() {}
 
-    public EodhPriceResponse(String date, BigDecimal close) {
+    public EodhPriceResponse(String date, Double close) {
         this.date = date;
         this.close = close;
         this.adjustedClose = close;
@@ -31,43 +46,43 @@ public class EodhPriceResponse {
         this.date = date;
     }
 
-    public BigDecimal getOpen() {
+    public Double getOpen() {
         return open;
     }
 
-    public void setOpen(BigDecimal open) {
+    public void setOpen(Double open) {
         this.open = open;
     }
 
-    public BigDecimal getHigh() {
+    public Double getHigh() {
         return high;
     }
 
-    public void setHigh(BigDecimal high) {
+    public void setHigh(Double high) {
         this.high = high;
     }
 
-    public BigDecimal getLow() {
+    public Double getLow() {
         return low;
     }
 
-    public void setLow(BigDecimal low) {
+    public void setLow(Double low) {
         this.low = low;
     }
 
-    public BigDecimal getClose() {
+    public Double getClose() {
         return close;
     }
 
-    public void setClose(BigDecimal close) {
+    public void setClose(Double close) {
         this.close = close;
     }
 
-    public BigDecimal getAdjustedClose() {
+    public Double getAdjustedClose() {
         return adjustedClose;
     }
 
-    public void setAdjustedClose(BigDecimal adjustedClose) {
+    public void setAdjustedClose(Double adjustedClose) {
         this.adjustedClose = adjustedClose;
     }
 

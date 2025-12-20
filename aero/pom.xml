@@ -74,6 +74,13 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- .env file support -->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
+
         <!-- QuickFIX/J - FIX Protocol Implementation -->
         <dependency>
             <groupId>org.quickfixj</groupId>

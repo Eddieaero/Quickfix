@@ -71,7 +71,7 @@ public class MarketDataController {
         int cacheSize = marketDataService.getCacheSize();
         return ResponseEntity.ok(Map.of(
                 "cacheSize", cacheSize,
-                "cacheExpirationMs", 5 * 60 * 1000,
+                "cacheExpirationMs", 5 * 360 * 1000,
                 "timestamp", System.currentTimeMillis()
         ));
     }
@@ -109,15 +109,61 @@ public class MarketDataController {
 
     /**
      * Get DSE (Tanzania stock exchange) specific data.
-     * Returns common Tanzania stocks.
-     * @return List of DSE stocks with current prices
+     * Returns all Tanzania DSE listed stocks.
+     * @return Map of DSE stocks with current prices
      */
     @GetMapping("/dse/stocks")
     public ResponseEntity<Map<String, MarketPriceDto>> getDseStocks() {
-        String[] tanzaniaStocks = {"CRDB.TZ", "NMB.TZ", "TBL.TZ", "JHL.TZ"};
-        Map<String, MarketPriceDto> stocks = new java.util.HashMap<>();
+        // All DSE listed companies
+        String[] dseStocks = {
+            // Major Banks & Financial
+            "CRDB.TZ",      // CRDB Bank
+            "NMB.TZ",       // National Microfinance Bank
+            "TBL.TZ",       // Tanzania Breweries Limited
+            "TPLF.TZ",      // Tanzania Portland Cement
+            "SIMBA.TZ",     // Simba Cement
+            "UCHM.TZ",      // Uchumi Supermarkets
+            "SWALLOW.TZ",   // Swallow Automobiles
+            "KCB.TZ",       // Kenya Commercial Bank Tanzania
+            "AIRTEL.TZ",    // Airtel Tanzania
+            "VODACOM.TZ",   // Vodacom Tanzania
+            "TTCL.TZ",      // Tanzania Telecommunications Company
+            "TANZCEM.TZ",   // Tanzania Cement Company
+            "MOGAS.TZ",     // Mogassham
+            "DACB.TZ",      // Dar es Salaam Community Bank
+            "Tanzania.TZ"   // Tanzania National
+        };
 
-        for (String stock : tanzaniaStocks) {
+        Map<String, MarketPriceDto> stocks = new java.util.HashMap<>();
+        for (String stock : dseStocks) {
+            stocks.put(stock, marketDataService.getCurrentPrice(stock));
+        }
+
+        return ResponseEntity.ok(stocks);
+    }
+
+    /**
+     * Get top US stocks with real market prices from EODHD.
+     * @return List of popular US stock prices
+     */
+    @GetMapping("/us/stocks")
+    public ResponseEntity<Map<String, MarketPriceDto>> getUsStocks() {
+        // Popular US stocks for demonstration
+        String[] usStocks = {
+            "AAPL",     // Apple Inc.
+            "MSFT",     // Microsoft Corporation
+            "GOOGL",    // Alphabet Inc.
+            "AMZN",     // Amazon.com Inc.
+            "TSLA",     // Tesla Inc.
+            "NVDA",     // NVIDIA Corporation
+            "META",     // Meta Platforms Inc.
+            "NFLX",     // Netflix Inc.
+            "COIN",     // Coinbase Global Inc.
+            "AMD"       // Advanced Micro Devices
+        };
+
+        Map<String, MarketPriceDto> stocks = new java.util.HashMap<>();
+        for (String stock : usStocks) {
             stocks.put(stock, marketDataService.getCurrentPrice(stock));
         }
 
@@ -135,5 +181,20 @@ public class MarketDataController {
                 "service", "market-data",
                 "timestamp", System.currentTimeMillis()
         ));
+    }
+
+    /**
+     * Debug endpoint to check configuration loading.
+     * @return Configuration values for debugging
+     */
+    @GetMapping("/debug/config")
+    public ResponseEntity<Map<String, String>> getConfig() {
+        Map<String, String> config = new java.util.HashMap<>();
+        config.put("EODHD_API_KEY", System.getProperty("EODHD_API_KEY", "NOT SET"));
+        config.put("MARKET_DATA_ENABLED", System.getProperty("MARKET_DATA_ENABLED", "NOT SET"));
+        config.put("CACHE_EXPIRATION_MINUTES", System.getProperty("CACHE_EXPIRATION_MINUTES", "NOT SET"));
+        config.put("USER_DIR", System.getProperty("user.dir"));
+        config.put("JAVA_VERSION", System.getProperty("java.version"));
+        return ResponseEntity.ok(config);
     }
 }

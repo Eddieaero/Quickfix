@@ -105,9 +105,9 @@ const DseMarketOverview: React.FC = () => {
                   <span className="font-bold text-gray-900 dark:text-white">
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
-                      currency: stock.currency,
+                      currency: stock.currency || 'USD',
                       minimumFractionDigits: 2,
-                    }).format(stock.price)}
+                    }).format(stock.price || 0)}
                   </span>
                 </td>
               </tr>

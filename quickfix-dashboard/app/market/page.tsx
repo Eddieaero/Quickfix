@@ -1,10 +1,12 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import MarketPriceWidget from '@/components/MarketPriceWidget';
 import DseMarketOverview from '@/components/DseMarketOverview';
+import UsMarketOverview from '@/components/UsMarketOverview';
 
 export default function MarketPage() {
+  const [showDse, setShowDse] = useState(false);
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 p-6">
       <div className="max-w-7xl mx-auto">
@@ -18,17 +20,43 @@ export default function MarketPage() {
           </p>
         </div>
 
-        {/* Quick Price Widgets */}
+        {/* Quick Price Widgets - US Stocks */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <MarketPriceWidget symbol="CRDB.TZ" />
-          <MarketPriceWidget symbol="NMB.TZ" />
-          <MarketPriceWidget symbol="TBL.TZ" />
           <MarketPriceWidget symbol="AAPL" />
+          <MarketPriceWidget symbol="MSFT" />
+          <MarketPriceWidget symbol="GOOGL" />
+          <MarketPriceWidget symbol="AMZN" />
         </div>
 
-        {/* DSE Market Overview */}
+        {/* US Market Overview - Primary */}
         <div className="mb-8">
-          <DseMarketOverview />
+          <UsMarketOverview />
+        </div>
+
+        {/* DSE Market Overview - Collapsible */}
+        <div className="mb-8">
+          <div 
+            onClick={() => setShowDse(!showDse)}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-gray-400"
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                📊 DSE Market Overview (Tanzania)
+              </h2>
+              <span className="text-2xl text-gray-600 dark:text-gray-400">
+                {showDse ? '▼' : '▶'}
+              </span>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
+              ⚠️ Note: EODHD API does not currently support Tanzania Stock Exchange. Symbols will show "not supported" status.
+            </p>
+          </div>
+          
+          {showDse && (
+            <div className="mt-4">
+              <DseMarketOverview />
+            </div>
+          )}
         </div>
 
         {/* Information Cards */}

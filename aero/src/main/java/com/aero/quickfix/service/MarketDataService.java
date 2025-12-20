@@ -24,8 +24,8 @@ public class MarketDataService {
     // In-memory cache for prices (key: symbol, value: MarketPriceDto)
     private final Map<String, MarketPriceDto> priceCache = new ConcurrentHashMap<>();
 
-    // Cache expiration time in milliseconds (5 minutes)
-    private static final long CACHE_EXPIRATION_MS = 5 * 60 * 1000;
+    // Cache expiration time in milliseconds (60 minutes to conserve free tier API quota)
+    private static final long CACHE_EXPIRATION_MS = 60 * 60 * 1000;
 
     /**
      * Get current market price for a symbol.

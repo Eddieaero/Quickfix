@@ -6,6 +6,11 @@ Thumbs.db
 *.swp
 *.swo
 
+# Environment Variables - KEEP SECRET
+.env
+.env.local
+.env.*.local
+
 # VSCode
 .vscode/
 .vscode/*
