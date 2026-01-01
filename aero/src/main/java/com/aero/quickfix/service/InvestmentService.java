@@ -7,8 +7,8 @@ import com.aero.quickfix.dto.MarketPriceDto;
 import com.aero.quickfix.dto.PortfolioDto;
 import com.aero.quickfix.model.Investment;
 import com.aero.quickfix.model.Portfolio;
-import com.aero.quickfix.repository.InvestmentRepository;
-import com.aero.quickfix.repository.PortfolioRepository;
+import com.aero.quickfix.repository.IInvestmentRepository;
+import com.aero.quickfix.repository.IPortfolioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
 public class InvestmentService {
 
     @Autowired
-    private PortfolioRepository portfolioRepository;
+    private IPortfolioRepository portfolioRepository;
 
     @Autowired
-    private InvestmentRepository investmentRepository;
+    private IInvestmentRepository investmentRepository;
 
     @Autowired
     private MarketDataService marketDataService;

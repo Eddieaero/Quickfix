@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * In-memory repository for storing investments.
  */
 @Repository
-public class InvestmentRepository {
+public class InvestmentRepository implements IInvestmentRepository {
     
     private final Map<String, Investment> investments = new ConcurrentHashMap<>();
 

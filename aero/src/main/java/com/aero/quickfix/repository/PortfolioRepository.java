@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * In-memory repository for storing portfolios.
  */
 @Repository
-public class PortfolioRepository {
+public class PortfolioRepository implements IPortfolioRepository {
     
     private final Map<String, Portfolio> portfolios = new ConcurrentHashMap<>();
 
