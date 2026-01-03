@@ -106,7 +106,7 @@ export default function SettingsPage() {
                 <label className="block text-sm font-medium text-foreground mb-2">
                   CORS Enabled
                 </label>
-                <div className="px-3 py-2 bg-input border border-border rounded text-green-200">
+                <div className="px-3 py-2 bg-input border border-border rounded text-gray-300">
                   ✓ Enabled (localhost:3000, localhost:3001)
                 </div>
               </div>
@@ -137,8 +137,8 @@ export default function SettingsPage() {
                   ⚠️ Data is not persisted. Using in-memory storage for development.
                 </p>
               </div>
-              <div className="p-3 bg-yellow-900/20 border border-yellow-900/50 rounded-lg">
-                <p className="text-sm text-yellow-200">
+              <div className="p-3 bg-gray-700/20 border border-gray-700/50 rounded-lg">
+                <p className="text-sm text-gray-300">
                   💡 For production, consider switching to PostgreSQL, MySQL, or MongoDB
                 </p>
               </div>

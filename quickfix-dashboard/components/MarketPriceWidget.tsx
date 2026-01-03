@@ -48,8 +48,8 @@ const MarketPriceWidget: React.FC<{ symbol: string }> = ({ symbol }) => {
 
   if (error || !price?.valid) {
     return (
-      <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4">
-        <div className="flex items-center gap-2 text-red-700 dark:text-red-200">
+      <div className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
           <AlertCircle size={16} />
           <span className="text-sm">{error || price?.errorMessage || 'Failed to load price'}</span>
         </div>
@@ -65,7 +65,7 @@ const MarketPriceWidget: React.FC<{ symbol: string }> = ({ symbol }) => {
   const lastUpdatedTime = new Date(price.lastUpdated).toLocaleTimeString();
 
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4 shadow-md">
+    <div className="bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4 shadow-md">
       <div className="flex justify-between items-start mb-3">
         <div>
           <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">
@@ -75,7 +75,7 @@ const MarketPriceWidget: React.FC<{ symbol: string }> = ({ symbol }) => {
             {formattedPrice}
           </p>
         </div>
-        <TrendingUp className="text-green-500" size={20} />
+        <TrendingUp className="text-gray-400" size={20} />
       </div>
       <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-600">
         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -83,7 +83,7 @@ const MarketPriceWidget: React.FC<{ symbol: string }> = ({ symbol }) => {
         </p>
         <button
           onClick={fetchPrice}
-          className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 flex items-center gap-1"
+          className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-700 flex items-center gap-1"
         >
           <RefreshCw size={12} />
           Updated {lastUpdatedTime}

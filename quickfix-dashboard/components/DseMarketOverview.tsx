@@ -46,8 +46,8 @@ const DseMarketOverview: React.FC = () => {
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg p-4">
-        <div className="flex items-center gap-2 text-red-700 dark:text-red-200">
+      <div className="bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+        <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
           <AlertCircle size={16} />
           <span>{error}</span>
         </div>
@@ -57,7 +57,7 @@ const DseMarketOverview: React.FC = () => {
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4">
+      <div className="bg-gradient-to-r from-gray-600 to-gray-700 px-6 py-4">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-bold text-white">DSE Market Overview</h3>
           <button
@@ -97,7 +97,7 @@ const DseMarketOverview: React.FC = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 text-xs font-medium rounded-full">
+                  <span className="inline-block px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-full">
                     {stock.exchange}
                   </span>
                 </td>

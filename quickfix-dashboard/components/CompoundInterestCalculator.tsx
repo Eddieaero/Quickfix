@@ -170,7 +170,7 @@ export function CompoundInterestCalculator({ onCalculate }: CompoundInterestCalc
               <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">
                 Final Amount
               </p>
-              <p className="text-lg font-semibold text-green-500">{formatCurrency(result.finalAmount)}</p>
+              <p className="text-lg font-semibold text-gray-300">{formatCurrency(result.finalAmount)}</p>
             </div>
           </div>
 
@@ -179,14 +179,14 @@ export function CompoundInterestCalculator({ onCalculate }: CompoundInterestCalc
               <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">
                 Total Interest
               </p>
-              <p className="text-lg font-semibold text-blue-500">{formatCurrency(result.totalInterest)}</p>
+              <p className="text-lg font-semibold text-gray-300">{formatCurrency(result.totalInterest)}</p>
             </div>
 
             <div className="bg-background p-4 rounded-lg">
               <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">
                 Return %
               </p>
-              <p className="text-lg font-semibold text-purple-500">
+              <p className="text-lg font-semibold text-gray-300">
                 {(
                   ((result.finalAmount - parseFloat(principal)) / parseFloat(principal)) *
                   100
@@ -205,7 +205,7 @@ export function CompoundInterestCalculator({ onCalculate }: CompoundInterestCalc
             <p>
               Starting with {formatCurrency(parseFloat(principal))} at {rate}% annual interest,
               compounded {result.compoundingPeriod.toLowerCase()}, you will have{' '}
-              <span className="font-semibold text-green-500">{formatCurrency(result.finalAmount)}</span> in{' '}
+              <span className="font-semibold text-gray-300">{formatCurrency(result.finalAmount)}</span> in{' '}
               {years} year{parseInt(years) !== 1 ? 's' : ''}.
             </p>
           </div>

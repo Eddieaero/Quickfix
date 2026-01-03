@@ -1,325 +1,324 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { StatusBadge } from '@/components/ui/status-badge'
-import { Activity, Power, Wifi, WifiOff, BarChart3, TrendingUp, Package } from 'lucide-react'
-import axios from 'axios'
-import LoginPage from '@/components/LoginPage'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { 
+  BarChart3, 
+  TrendingUp, 
+  Zap, 
+  Shield, 
+  Wifi, 
+  Code2, 
+  ArrowRight,
+  CheckCircle2,
+  Activity,
+  PieChart
+} from 'lucide-react'
+import Link from 'next/link'
+import { useState, useEffect } from 'react'
 
-interface TradeData {
-  orderId: string
-  symbol: string
-  side: 'BUY' | 'SELL'
-  quantity: number
-  price: number
-  status: string
-  executedQty: number
-  executedPrice: number
-  timestamp: number
-  messageType: string
-}
+export default function LandingPage() {
+  const [scrolled, setScrolled] = useState(false)
 
-interface TradeStatsDto {
-  totalTrades: number
-  totalVolume: number
-  averagePrice: number
-  recentTrades: TradeData[]
-}
-
-export default function Dashboard() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [currentUsername, setCurrentUsername] = useState('')
-  const [connectionStatus, setConnectionStatus] = useState<'CONNECTED' | 'DISCONNECTED'>('DISCONNECTED')
-  const [wsConnected, setWsConnected] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [tradeStats, setTradeStats] = useState<TradeStatsDto>({
-    totalTrades: 0,
-    totalVolume: 0,
-    averagePrice: 0,
-    recentTrades: []
-  })
-  const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
-  const wsRef = useRef<WebSocket | null>(null)
-
-  // Check authentication on mount
   useEffect(() => {
-    const token = localStorage.getItem('token')
-    const username = localStorage.getItem('username')
-    
-    if (token && username) {
-      setIsAuthenticated(true)
-      setCurrentUsername(username)
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
     }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
-
-  // Initialize WebSocket for real-time trade updates
-  useEffect(() => {
-    if (!isAuthenticated) return
-
-    const connectWebSocket = () => {
-      try {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
-        // Connect to backend WebSocket - use localhost:8080 for local dev, adjust as needed
-        const wsUrl = typeof window !== 'undefined' && window.location.hostname === 'localhost'
-          ? `${protocol}//localhost:8080/ws/trades`
-          : `${protocol}//${window.location.host}/ws/trades`
         
-        console.log('Connecting to WebSocket:', wsUrl)
-        const ws = new WebSocket(wsUrl)
-        
-        ws.onopen = () => {
-          console.log('WebSocket connected')
-          setWsConnected(true)
-        }
-        
-        ws.onmessage = (event) => {
-          try {
-            const data = JSON.parse(event.data) as TradeStatsDto
-            setTradeStats(data)
-            setLastUpdate(new Date())
-          } catch (error) {
-            console.error('Failed to parse WebSocket message:', error)
-          }
-        }
-        
-        ws.onerror = (error) => {
-          console.error('WebSocket error:', error)
-          setWsConnected(false)
-        }
-        
-        ws.onclose = () => {
-          console.log('WebSocket disconnected')
-          setWsConnected(false)
-          // Attempt to reconnect after 3 seconds
-          setTimeout(connectWebSocket, 3000)
-        }
-        
-        wsRef.current = ws
-      } catch (error) {
-        console.error('Failed to connect WebSocket:', error)
-      }
-    }
-
-    connectWebSocket()
-
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close()
-      }
-    }
-  }, [])
-
-  // Check FIX connection status and fetch trade data via HTTP fallback
-  useEffect(() => {
-    const checkStatus = async () => {
-      try {
-        const response = await axios.get('/api/quickfix/status')
-        const statusText = response.data
-        const isConnected = statusText.includes('CONNECTED') && !statusText.includes('DISCONNECTED')
-        setConnectionStatus(isConnected ? 'CONNECTED' : 'DISCONNECTED')
-        
-        // If WebSocket is disconnected, fetch trades via HTTP as fallback
-        if (!wsConnected) {
-          try {
-            const tradesResponse = await axios.get('/api/quickfix/trades')
-            setTradeStats(tradesResponse.data)
-            setLastUpdate(new Date())
-          } catch (error) {
-            console.debug('Failed to fetch trades via HTTP:', error)
-          }
-        }
-      } catch (error) {
-        setConnectionStatus('DISCONNECTED')
-      }
-    }
-
-    // Check status immediately and then every 5 seconds
-    checkStatus()
-    const interval = setInterval(checkStatus, 5000)
-    return () => clearInterval(interval)
-  }, [wsConnected])
-
-  const handleConnect = async () => {
-    setLoading(true)
-    try {
-      await axios.post('/api/quickfix/start')
-      setConnectionStatus('CONNECTED')
-    } catch (error) {
-      console.error('Failed to connect:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleDisconnect = async () => {
-    setLoading(true)
-    try {
-      await axios.post('/api/quickfix/stop')
-      setConnectionStatus('DISCONNECTED')
-    } catch (error) {
-      console.error('Failed to disconnect:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-    setIsAuthenticated(false)
-    setCurrentUsername('')
-  }
-
-  const handleLoginSuccess = (token: string, username: string) => {
-    setIsAuthenticated(true)
-    setCurrentUsername(username)
-  }
-
-  const formatPrice = (price: number) => `$${price.toFixed(2)}`
-  const formatDate = (timestamp: number) => new Date(timestamp).toLocaleTimeString()
-
-  // Show login page if not authenticated
-  if (!isAuthenticated) {
-    return <LoginPage onLoginSuccess={handleLoginSuccess} />
-  }
-
   return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">QuickFIX Dashboard</h1>
-          <p className="text-muted-foreground">Real-time FIX protocol monitoring with WebSocket streaming</p>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+      {/* Navigation */}
+      <nav className={`fixed w-full top-0 z-50 transition-all ${scrolled ? 'bg-slate-950/80 backdrop-blur border-b border-slate-800' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Zap className="w-8 h-8 text-gray-400" />
+            <span className="text-xl font-bold text-white">Aero</span>
+          </div>
+          <Link href="/login">
+            <Button className="bg-gray-700 hover:bg-gray-600">Sign In</Button>
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20 text-center">
+        <div className="mb-8 inline-block">
+          <span className="px-4 py-2 bg-gray-500/10 border border-gray-500/30 rounded-full text-gray-300 text-sm font-medium">
+            🚀 Real-Time FIX Trading Platform
+          </span>
+        </div>
+        
+        <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6 leading-tight">
+          Trading Intelligence <br />
+          <span className="bg-gradient-to-r from-gray-300 to-gray-400 bg-clip-text text-transparent">
+            Powered by FIX Protocol
+          </span>
+        </h1>
+        
+        <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
+          Execute algorithmic trading strategies with enterprise-grade FIX protocol connectivity. Real-time market data, advanced analytics, and intelligent risk management.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Link href="/dashboard">
+            <Button size="lg" className="bg-gray-700 hover:bg-gray-600 text-white px-8">
+              Launch Dashboard <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </Link>
+          <Button variant="outline" size="lg" className="border-slate-700 text-white hover:bg-slate-800 px-8">
+            View Documentation
+          </Button>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Core Features</h2>
+          <p className="text-lg text-slate-400">Everything you need for professional trading</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <Card className="md:col-span-1">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Feature 1 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Activity className="w-5 h-5" />
-                FIX Status
-              </CardTitle>
+              <Wifi className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Real-Time Connectivity</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-center">
-                <StatusBadge status={connectionStatus === 'CONNECTED' ? 'connected' : 'disconnected'} />
-              </div>
-              <div className="flex gap-2">
-                <Button onClick={handleConnect} disabled={loading || connectionStatus === 'CONNECTED'} className="flex-1" variant="default">
-                  <Wifi className="w-4 h-4 mr-2" />
-                  Connect
-                </Button>
-                <Button onClick={handleDisconnect} disabled={loading || connectionStatus === 'DISCONNECTED'} className="flex-1" variant="destructive">
-                  <WifiOff className="w-4 h-4 mr-2" />
-                  Disconnect
-                </Button>
-              </div>
-              <div className={`text-xs px-2 py-1 rounded text-center ${wsConnected ? 'bg-green-900/50 text-green-200' : 'bg-red-900/50 text-red-200'}`}>
-                {wsConnected ? '● WebSocket Connected' : '○ WebSocket Disconnected'}
-              </div>
-              {lastUpdate && <p className="text-xs text-muted-foreground text-center">Updated: {lastUpdate.toLocaleTimeString()}</p>}
+            <CardContent>
+              <CardDescription className="text-slate-400">
+                WebSocket-based trade streaming with sub-millisecond latency. Instant updates on order status and executions.
+              </CardDescription>
             </CardContent>
           </Card>
 
-          <Card className="md:col-span-1">
+          {/* Feature 2 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Package className="w-5 h-5" />
-                Total Trades
-              </CardTitle>
+              <BarChart3 className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Market Analytics</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-blue-500">{tradeStats.totalTrades}</div>
-              <p className="text-sm text-muted-foreground mt-2">Orders processed</p>
+              <CardDescription className="text-slate-400">
+                Real-time market data integration with multiple sources. Technical indicators and price analysis tools.
+              </CardDescription>
             </CardContent>
           </Card>
 
-          <Card className="md:col-span-1">
+          {/* Feature 3 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <BarChart3 className="w-5 h-5" />
-                Total Volume
-              </CardTitle>
+              <Shield className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Risk Management</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-green-500">{tradeStats.totalVolume.toLocaleString()}</div>
-              <p className="text-sm text-muted-foreground mt-2">Shares traded</p>
+              <CardDescription className="text-slate-400">
+                Advanced position monitoring, stop-loss mechanisms, and portfolio-level risk limits with real-time alerts.
+              </CardDescription>
             </CardContent>
           </Card>
 
-          <Card className="md:col-span-1">
+          {/* Feature 4 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <TrendingUp className="w-5 h-5" />
-                Avg Price
-              </CardTitle>
+              <TrendingUp className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Strategy Execution</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-4xl font-bold text-purple-500">{formatPrice(tradeStats.averagePrice)}</div>
-              <p className="text-sm text-muted-foreground mt-2">Average execution price</p>
+              <CardDescription className="text-slate-400">
+                Deploy algorithmic trading strategies with FIX protocol execution. Support for multiple order types and conditions.
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          {/* Feature 5 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
+            <CardHeader>
+              <PieChart className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Portfolio Tracking</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-slate-400">
+                Monitor positions, P&L, and performance metrics in real-time. Detailed trade history and analytics.
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          {/* Feature 6 */}
+          <Card className="bg-slate-900/50 border-slate-800 hover:border-gray-600/50 transition-all">
+            <CardHeader>
+              <Code2 className="w-8 h-8 text-gray-400 mb-2" />
+              <CardTitle className="text-white">Developer Ready</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription className="text-slate-400">
+                REST APIs and WebSocket interfaces for custom integrations. Comprehensive documentation and examples.
+              </CardDescription>
             </CardContent>
           </Card>
         </div>
+      </section>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Recent Trades
-            </CardTitle>
-            <CardDescription>Last 20 executed trades</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-4 font-semibold text-muted-foreground">Time</th>
-                    <th className="text-left py-3 px-4 font-semibold text-muted-foreground">Order ID</th>
-                    <th className="text-left py-3 px-4 font-semibold text-muted-foreground">Symbol</th>
-                    <th className="text-left py-3 px-4 font-semibold text-muted-foreground">Side</th>
-                    <th className="text-right py-3 px-4 font-semibold text-muted-foreground">Qty</th>
-                    <th className="text-right py-3 px-4 font-semibold text-muted-foreground">Price</th>
-                    <th className="text-right py-3 px-4 font-semibold text-muted-foreground">Exec Qty</th>
-                    <th className="text-center py-3 px-4 font-semibold text-muted-foreground">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tradeStats.recentTrades && tradeStats.recentTrades.length > 0 ? (
-                    tradeStats.recentTrades.map((trade) => (
-                      <tr key={trade.orderId} className="border-b border-border hover:bg-muted/50">
-                        <td className="py-3 px-4 text-muted-foreground">{formatDate(trade.timestamp)}</td>
-                        <td className="py-3 px-4 font-mono text-foreground text-xs">{trade.orderId}</td>
-                        <td className="py-3 px-4 font-bold text-foreground">{trade.symbol}</td>
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${trade.side === 'BUY' ? 'bg-green-900/50 text-green-200' : 'bg-red-900/50 text-red-200'}`}>
-                            {trade.side}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-right text-foreground">{trade.quantity.toLocaleString()}</td>
-                        <td className="py-3 px-4 text-right text-foreground">{formatPrice(trade.price)}</td>
-                        <td className="py-3 px-4 text-right text-foreground">{trade.executedQty.toLocaleString()}</td>
-                        <td className="py-3 px-4 text-center">
-                          <span className={`px-2 py-1 rounded text-xs font-semibold ${trade.status === 'FILLED' ? 'bg-blue-900/50 text-blue-200' : trade.status === 'PARTIALLY_FILLED' ? 'bg-yellow-900/50 text-yellow-200' : 'bg-slate-700/50 text-slate-300'}`}>
-                            {trade.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={8} className="py-8 text-center text-muted-foreground">
-                        {connectionStatus === 'CONNECTED' ? 'Waiting for trade data...' : 'Connect to FIX server to see trades'}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+      {/* How It Works */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">How It Works</h2>
+          <p className="text-lg text-slate-400">Seamless integration from market data to trade execution</p>
+        </div>
+
+        <div className="grid md:grid-cols-4 gap-8">
+          {[
+            { num: '01', title: 'Market Data', desc: 'Real-time price feeds from multiple sources via EODHD API' },
+            { num: '02', title: 'Analysis', desc: 'Technical indicators and quantitative signals' },
+            { num: '03', title: 'Execution', desc: 'Order generation and FIX protocol transmission' },
+            { num: '04', title: 'Monitoring', desc: 'Real-time tracking and performance analytics' }
+          ].map((step, idx) => (
+            <div key={idx} className="text-center">
+              <div className="w-16 h-16 bg-gray-700/20 border border-gray-600/50 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-gray-400">{step.num}</span>
+              </div>
+              <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
+              <p className="text-slate-400">{step.desc}</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Technology Stack */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Built on Proven Technology</h2>
+          <p className="text-lg text-slate-400">Enterprise-grade components for reliability</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: 'QuickFIX/J', desc: 'Open-source FIX engine' },
+            { name: 'Spring Boot', desc: 'Enterprise Java framework' },
+            { name: 'Next.js', desc: 'Modern React framework' },
+            { name: 'WebSocket', desc: 'Real-time communication' },
+            { name: 'EODHD API', desc: 'Market data provider' },
+            { name: 'PostgreSQL', desc: 'Data persistence' },
+            { name: 'React', desc: 'UI library' },
+            { name: 'Tailwind CSS', desc: 'Styling framework' }
+          ].map((tech, idx) => (
+            <div key={idx} className="bg-slate-900/50 border border-slate-800 rounded-lg p-4 text-center hover:border-gray-600/50 transition-all">
+              <h3 className="font-semibold text-white mb-1">{tech.name}</h3>
+              <p className="text-sm text-slate-400">{tech.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Capabilities */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Quantitative Capabilities</h2>
+          <p className="text-lg text-slate-400">Tools for the modern quant trader</p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-8">
+            <h3 className="text-xl font-bold text-white mb-6">Current Features</h3>
+            <ul className="space-y-3">
+              {[
+                'Real-time FIX protocol connectivity',
+                'WebSocket-based trade streaming',
+                'Market price data aggregation',
+                'Order execution and tracking',
+                'Trade history and analytics',
+                'Position monitoring dashboard'
+              ].map((feature, idx) => (
+                <li key={idx} className="flex items-center gap-3 text-slate-300">
+                  <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-slate-900/50 border border-slate-800 rounded-lg p-8">
+            <h3 className="text-xl font-bold text-white mb-6">Roadmap</h3>
+            <ul className="space-y-3">
+              {[
+                'Backtesting framework for strategy validation',
+                'Technical indicator library and signals',
+                'Portfolio optimization engine',
+                'Machine learning prediction models',
+                'Advanced risk metrics (VaR, Sortino, etc.)',
+                'Multi-asset class support'
+              ].map((feature, idx) => (
+                <li key={idx} className="flex items-center gap-3 text-slate-400">
+                  <Activity className="w-5 h-5 text-gray-500/50 flex-shrink-0" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <div className="bg-gradient-to-r from-gray-900/20 to-gray-800/10 border border-gray-500/30 rounded-lg p-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to Get Started?</h2>
+          <p className="text-lg text-slate-400 mb-8">
+            Access your trading dashboard and start executing strategies with real-time market data.
+          </p>
+          <Link href="/dashboard">
+            <Button size="lg" className="bg-gray-700 hover:bg-gray-600 text-white px-8">
+              Enter Dashboard <ArrowRight className="ml-2 w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800 mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Zap className="w-6 h-6 text-gray-400" />
+                <span className="font-bold text-white">Aero</span>
+              </div>
+              <p className="text-slate-400 text-sm">Enterprise trading platform powered by FIX protocol</p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-4">Product</h3>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><a href="#" className="hover:text-white transition">Features</a></li>
+                <li><a href="#" className="hover:text-white transition">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition">Documentation</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><a href="#" className="hover:text-white transition">About</a></li>
+                <li><a href="#" className="hover:text-white transition">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold text-white mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><a href="#" className="hover:text-white transition">Privacy</a></li>
+                <li><a href="#" className="hover:text-white transition">Terms</a></li>
+                <li><a href="#" className="hover:text-white transition">Security</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-slate-800 pt-8">
+            <p className="text-center text-slate-400 text-sm">
+              © 2026 Aero Trading Platform. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

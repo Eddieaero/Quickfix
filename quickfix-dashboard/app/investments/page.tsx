@@ -118,10 +118,10 @@ export default function InvestmentsPage() {
 
         {/* Error Alert */}
         {error && (
-          <Card className="p-4 mb-6 bg-red-500/10 border border-red-500/20">
+          <Card className="p-4 mb-6 bg-gray-600/10 border border-gray-600/20">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-red-500" />
-              <p className="text-red-500">{error}</p>
+              <AlertCircle className="w-5 h-5 text-gray-400" />
+              <p className="text-gray-400">{error}</p>
             </div>
           </Card>
         )}

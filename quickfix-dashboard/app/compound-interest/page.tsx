@@ -122,19 +122,19 @@ export default function CompoundInterestPage() {
                       <div className="grid grid-cols-3 gap-4">
                         <div className="bg-card p-3 rounded">
                           <p className="text-xs text-muted-foreground mb-1">Final Amount</p>
-                          <p className="font-semibold text-green-500">
+                          <p className="font-semibold text-gray-300">
                             {formatCurrency(calc.finalAmount)}
                           </p>
                         </div>
                         <div className="bg-card p-3 rounded">
                           <p className="text-xs text-muted-foreground mb-1">Interest Earned</p>
-                          <p className="font-semibold text-blue-500">
+                          <p className="font-semibold text-gray-300">
                             {formatCurrency(calc.totalInterest)}
                           </p>
                         </div>
                         <div className="bg-card p-3 rounded">
                           <p className="text-xs text-muted-foreground mb-1">Return %</p>
-                          <p className="font-semibold text-purple-500">
+                          <p className="font-semibold text-gray-300">
                             {(
                               ((calc.finalAmount - calc.principal) / calc.principal) *
                               100

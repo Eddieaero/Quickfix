@@ -169,13 +169,13 @@ export default function UserManagementPage() {
 
       {/* Messages */}
       {error && (
-        <Card className="mb-6 border-red-900/50 bg-red-900/10">
-          <CardContent className="pt-6 text-red-200">{error}</CardContent>
+        <Card className="mb-6 border-gray-600/50 bg-gray-700/10">
+          <CardContent className="pt-6 text-gray-300">{error}</CardContent>
         </Card>
       )}
       {success && (
-        <Card className="mb-6 border-green-900/50 bg-green-900/10">
-          <CardContent className="pt-6 text-green-200">{success}</CardContent>
+        <Card className="mb-6 border-gray-600/50 bg-gray-700/10">
+          <CardContent className="pt-6 text-gray-300">{success}</CardContent>
         </Card>
       )}
 
@@ -274,12 +274,12 @@ export default function UserManagementPage() {
                       <td className="py-3 px-4 text-muted-foreground">{user.email}</td>
                       <td className="py-3 px-4">
                         {user.enabled ? (
-                          <span className="flex items-center gap-1 text-green-200">
+                          <span className="flex items-center gap-1 text-gray-300">
                             <CheckCircle className="w-4 h-4" />
                             Enabled
                           </span>
                         ) : (
-                          <span className="flex items-center gap-1 text-red-200">
+                          <span className="flex items-center gap-1 text-gray-500">
                             <XCircle className="w-4 h-4" />
                             Disabled
                           </span>

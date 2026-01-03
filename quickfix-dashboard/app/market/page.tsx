@@ -62,7 +62,7 @@ export default function MarketPage() {
         {/* Information Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* EODHD Integration Info */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-gray-500">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
               📊 Market Data Source
             </h3>
@@ -79,7 +79,7 @@ export default function MarketPage() {
           </div>
 
           {/* API Configuration */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-gray-400">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
               ⚙️ Configuration
             </h3>
@@ -87,7 +87,7 @@ export default function MarketPage() {
               To use live market data:
             </p>
             <ol className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <li>1. Sign up at <a href="https://eodhd.com" className="text-blue-500 hover:underline" target="_blank">EODHD.com</a></li>
+              <li>1. Sign up at <a href="https://eodhd.com" className="text-gray-400 hover:underline" target="_blank">EODHD.com</a></li>
               <li>2. Get your API key (free or paid plans available)</li>
               <li>3. Update <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">application.yml</code></li>
               <li>4. Set <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">eodhd.api.key</code> with your key</li>
@@ -96,8 +96,8 @@ export default function MarketPage() {
         </div>
 
         {/* Demo Mode Notice */}
-        <div className="mt-8 bg-yellow-50 dark:bg-yellow-900 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4">
-          <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+        <div className="mt-8 bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg p-4">
+          <p className="text-gray-700 dark:text-gray-300 text-sm">
             <strong>ℹ️ Demo Mode:</strong> Currently running in demo mode with sample Tanzania stock prices. 
             To see real market data, add your EODHD API key to the configuration.
           </p>

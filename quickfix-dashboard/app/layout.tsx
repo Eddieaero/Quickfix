@@ -25,9 +25,9 @@ export default function RootLayout({
             --popover-foreground: 0 0% 98.2%;
             --muted: 0 0% 14.9%;
             --muted-foreground: 0 0% 63.9%;
-            --accent: 0 84.2% 60.2%;
+            --accent: 0 0% 45%;
             --accent-foreground: 0 0% 9%;
-            --destructive: 0 84.2% 60.2%;
+            --destructive: 0 0% 55%;
             --destructive-foreground: 0 0% 9%;
             --border: 0 0% 14.9%;
             --input: 0 0% 14.9%;

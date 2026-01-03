@@ -104,7 +104,7 @@ export default function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
             {/* Error Message */}
             {error && (
-              <div className="p-3 rounded-md bg-red-900/20 border border-red-800/40 text-red-200 text-sm">
+              <div className="p-3 rounded-md bg-gray-700/20 border border-gray-600/40 text-gray-300 text-sm">
                 {error}
               </div>
             )}

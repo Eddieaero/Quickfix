@@ -93,7 +93,7 @@ export function CreatePortfolioForm({
             placeholder="e.g., Retirement Fund"
             disabled={isLoading}
           />
-          {errors.name && <p className="text-xs text-red-500 mt-1">{errors.name}</p>}
+          {errors.name && <p className="text-xs text-gray-400 mt-1">{errors.name}</p>}
         </div>
 
         <div>
@@ -113,7 +113,7 @@ export function CreatePortfolioForm({
             disabled={isLoading}
           />
           {errors.initialInvestment && (
-            <p className="text-xs text-red-500 mt-1">{errors.initialInvestment}</p>
+            <p className="text-xs text-gray-400 mt-1">{errors.initialInvestment}</p>
           )}
         </div>
 

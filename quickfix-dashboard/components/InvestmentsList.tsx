@@ -65,13 +65,13 @@ export function InvestmentsList({
 
   const getAssetTypeColor = (type: string): string => {
     const colors: Record<string, string> = {
-      STOCK: 'bg-blue-500/10 text-blue-500',
-      BOND: 'bg-purple-500/10 text-purple-500',
-      SAVINGS_ACCOUNT: 'bg-green-500/10 text-green-500',
-      FIXED_DEPOSIT: 'bg-orange-500/10 text-orange-500',
-      MUTUAL_FUND: 'bg-pink-500/10 text-pink-500',
+      STOCK: 'bg-gray-600/10 text-gray-400',
+      BOND: 'bg-gray-600/10 text-gray-400',
+      SAVINGS_ACCOUNT: 'bg-gray-600/10 text-gray-400',
+      FIXED_DEPOSIT: 'bg-gray-600/10 text-gray-400',
+      MUTUAL_FUND: 'bg-gray-600/10 text-gray-400',
     }
-    return colors[type] || 'bg-gray-500/10 text-gray-500'
+    return colors[type] || 'bg-gray-600/10 text-gray-400'
   }
 
   if (isLoading) {
@@ -178,19 +178,19 @@ export function InvestmentsList({
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Interest Earned</p>
-                  <p className={`font-semibold ${gainAmount >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`font-semibold ${gainAmount >= 0 ? 'text-gray-300' : 'text-gray-500'}`}>
                     {formatCurrency(investment.totalInterest)}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Gain</p>
-                  <p className={`font-semibold ${gainAmount >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`font-semibold ${gainAmount >= 0 ? 'text-gray-300' : 'text-gray-500'}`}>
                     {gainAmount >= 0 ? '+' : ''}{formatCurrency(gainAmount)}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground mb-1 uppercase tracking-wider">Return %</p>
-                  <p className={`font-semibold ${gainPercentage >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                  <p className={`font-semibold ${gainPercentage >= 0 ? 'text-gray-300' : 'text-gray-500'}`}>
                     {gainPercentage >= 0 ? '+' : ''}{gainPercentage.toFixed(2)}%
                   </p>
                 </div>

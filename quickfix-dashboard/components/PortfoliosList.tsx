@@ -147,7 +147,7 @@ export function PortfoliosList({
             <div>
               <p className="text-sm text-muted-foreground mb-1">Total Gains</p>
               <p className={`text-lg font-semibold flex items-center gap-1 ${
-                portfolio.totalGains >= 0 ? 'text-green-500' : 'text-red-500'
+                portfolio.totalGains >= 0 ? 'text-gray-300' : 'text-gray-500'
               }`}>
                 {portfolio.totalGains >= 0 ? '+' : ''}{formatCurrency(portfolio.totalGains)}
                 {portfolio.totalGains >= 0 && <TrendingUp className="w-4 h-4" />}
@@ -156,7 +156,7 @@ export function PortfoliosList({
             <div>
               <p className="text-sm text-muted-foreground mb-1">ROI</p>
               <p className={`text-lg font-semibold ${
-                portfolio.totalGainsPercentage >= 0 ? 'text-green-500' : 'text-red-500'
+                portfolio.totalGainsPercentage >= 0 ? 'text-gray-300' : 'text-gray-500'
               }`}>
                 {portfolio.totalGainsPercentage >= 0 ? '+' : ''}{portfolio.totalGainsPercentage.toFixed(2)}%
               </p>

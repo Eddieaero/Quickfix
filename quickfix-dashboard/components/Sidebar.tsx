@@ -28,7 +28,7 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
   const navItems = [
     {
       name: 'Dashboard',
-      href: '/',
+      href: '/dashboard',
       icon: Activity,
       description: 'Real-time trading view',
     },
@@ -65,8 +65,8 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
   ]
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/'
+    if (href === '/dashboard') {
+      return pathname === '/dashboard'
     }
     return pathname.startsWith(href)
   }
