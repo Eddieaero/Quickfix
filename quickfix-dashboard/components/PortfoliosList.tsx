@@ -73,7 +73,7 @@ export function PortfoliosList({
         </p>
         <button
           onClick={onCreateNew}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
         >
           <Plus className="w-4 h-4" />
           Create Portfolio
@@ -88,7 +88,7 @@ export function PortfoliosList({
         <h2 className="text-2xl font-bold">My Portfolios</h2>
         <button
           onClick={onCreateNew}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
         >
           <Plus className="w-4 h-4" />
           New Portfolio
@@ -115,7 +115,7 @@ export function PortfoliosList({
                   e.stopPropagation()
                   onEdit(portfolio)
                 }}
-                className="p-2 text-muted-foreground hover:bg-background rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700/30 rounded-lg transition-colors"
                 title="Edit portfolio"
               >
                 <Edit2 className="w-4 h-4" />
@@ -127,7 +127,7 @@ export function PortfoliosList({
                     onDelete(portfolio.portfolioId)
                   }
                 }}
-                className="p-2 text-muted-foreground hover:bg-destructive/10 hover:text-destructive rounded-lg transition-colors"
+                className="p-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700/30 rounded-lg transition-colors"
                 title="Delete portfolio"
               >
                 <Trash2 className="w-4 h-4" />
@@ -170,7 +170,7 @@ export function PortfoliosList({
                   e.stopPropagation()
                   onViewDetails(portfolio.portfolioId)
                 }}
-                className="w-full px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors"
+                className="w-full px-4 py-2 bg-gray-700/50 text-gray-200 rounded-lg hover:bg-gray-700 transition-colors font-medium"
               >
                 View Details & Investments
               </button>

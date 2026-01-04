@@ -122,14 +122,14 @@ export function CreatePortfolioForm({
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 px-4 py-2 border border-border rounded-lg hover:bg-background transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 border border-gray-500 text-gray-300 rounded-lg hover:bg-gray-700/30 hover:border-gray-400 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="flex-1 px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors disabled:opacity-50 font-medium"
           >
             {isLoading ? 'Creating...' : isEditMode ? 'Update' : 'Create'}
           </button>

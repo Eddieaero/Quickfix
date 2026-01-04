@@ -157,7 +157,7 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
           {isOpen && (
             <button
               onClick={onLogout}
-              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-gray-200 hover:bg-gray-700/30 rounded-lg transition-colors"
             >
               <LogOut className="w-4 h-4" />
               Logout
@@ -166,7 +166,7 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
           {!isOpen && (
             <button
               onClick={onLogout}
-              className="w-full flex items-center justify-center px-3 py-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+              className="w-full flex items-center justify-center px-3 py-2 text-gray-400 hover:text-gray-200 hover:bg-gray-700/30 rounded-lg transition-colors"
               title="Logout"
             >
               <LogOut className="w-4 h-4" />

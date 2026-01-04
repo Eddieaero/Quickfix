@@ -148,7 +148,7 @@ export function CompoundInterestCalculator({ onCalculate }: CompoundInterestCalc
         <button
           onClick={calculate}
           disabled={isCalculating}
-          className="w-full px-4 py-2 bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-colors font-medium disabled:opacity-50"
+          className="w-full px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium disabled:opacity-50"
         >
           {isCalculating ? 'Calculating...' : 'Calculate'}
         </button>
