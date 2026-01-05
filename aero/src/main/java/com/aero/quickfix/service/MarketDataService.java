@@ -1,7 +1,6 @@
 package com.aero.quickfix.service;
 
-import com.aero.quickfix.client.EodhMarketDataClient;
-import com.aero.quickfix.dto.EodhCompanyDataResponse;
+import com.aero.quickfix.client.FinvizMarketDataClient;
 import com.aero.quickfix.dto.MarketPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,24 +12,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service for managing market data operations.
- * Fetches and caches market prices from EODHD API.
+ * Fetches and caches market prices from Finviz-based APIs (Finnhub, Alpha Vantage).
  */
 @Service
 public class MarketDataService {
 
     @Autowired
-    private EodhMarketDataClient eodhClient;
+    private FinvizMarketDataClient finvizClient;
 
     // In-memory cache for prices (key: symbol, value: MarketPriceDto)
     private final Map<String, MarketPriceDto> priceCache = new ConcurrentHashMap<>();
 
-    // Cache expiration time in milliseconds (60 minutes to conserve free tier API quota)
+    // Cache expiration time in milliseconds (60 minutes)
     private static final long CACHE_EXPIRATION_MS = 60 * 60 * 1000;
 
     /**
      * Get current market price for a symbol.
      * Uses cache if available and not expired.
-     * @param symbol Stock symbol (e.g., CRDB.TZ)
+     * @param symbol Stock symbol (e.g., AAPL, CRDB)
      * @return MarketPriceDto with current price
      */
     public MarketPriceDto getCurrentPrice(String symbol) {
@@ -41,8 +40,8 @@ public class MarketDataService {
             return cachedPrice;
         }
 
-        // Fetch fresh price from EODHD
-        MarketPriceDto freshPrice = eodhClient.fetchLatestPrice(symbol);
+        // Fetch fresh price from Finviz APIs
+        MarketPriceDto freshPrice = finvizClient.fetchLatestPrice(symbol);
 
         // Cache the result
         if (freshPrice.isValid()) {
@@ -53,21 +52,13 @@ public class MarketDataService {
     }
 
     /**
-     * Get company fundamental data for a symbol.
-     * @param symbol Stock symbol
-     * @return EodhCompanyDataResponse with fundamentals
-     */
-    public EodhCompanyDataResponse getCompanyFundamentals(String symbol) {
-        return eodhClient.fetchCompanyFundamentals(symbol);
-    }
-
-    /**
-     * Validate if a symbol is valid and exists in the market.
+     * Validate if a symbol is valid by attempting to fetch its price.
      * @param symbol Stock symbol to validate
      * @return true if valid, false otherwise
      */
     public boolean isValidSymbol(String symbol) {
-        return eodhClient.validateSymbol(symbol);
+        MarketPriceDto price = getCurrentPrice(symbol);
+        return price.isValid();
     }
 
     /**
@@ -99,21 +90,15 @@ public class MarketDataService {
     }
 
     /**
-     * Get dividend income for a period.
+     * Note: Dividend income calculation requires additional data sources.
+     * Currently not supported with free APIs.
      * @param symbol Stock symbol
      * @param principal Investment amount
-     * @return Expected annual dividend income
+     * @return Zero (not currently calculated)
      */
     public BigDecimal calculateDividendIncome(String symbol, BigDecimal principal) {
-        EodhCompanyDataResponse fundamentals = getCompanyFundamentals(symbol);
-
-        if (fundamentals != null &&
-                fundamentals.getHighlights() != null &&
-                fundamentals.getHighlights().getDividendYield() != null) {
-            BigDecimal dividendYield = fundamentals.getHighlights().getDividendYield();
-            return principal.multiply(dividendYield);
-        }
-
+        // Dividend data requires paid subscriptions
+        // Use alternative sources or manual input
         return BigDecimal.ZERO;
     }
 

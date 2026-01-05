@@ -1,6 +1,29 @@
 version: '3.8'
 
 services:
+  timescaledb:
+    image: timescale/timescaledb:latest-pg15
+    container_name: aero-timescaledb
+    environment:
+      POSTGRES_USER: aero_user
+      POSTGRES_PASSWORD: aero_password
+      POSTGRES_DB: aero_quant
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aero_user -d aero_quant"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   quickfix-server:
     build: .
     container_name: quickfix-test-server
@@ -16,3 +39,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+volumes:
+  timescaledb_data:

@@ -14,6 +14,9 @@ import {
   TrendingUp,
   Calculator,
   BarChart3,
+  Zap,
+  LineChart,
+  History,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -49,6 +52,24 @@ export function Sidebar({ username, onLogout }: SidebarProps) {
       href: '/compound-interest',
       icon: Calculator,
       description: 'Calculate returns',
+    },
+    {
+      name: 'Backtest',
+      href: '/backtest',
+      icon: Zap,
+      description: 'Test strategies',
+    },
+    {
+      name: 'Strategies',
+      href: '/strategies',
+      icon: LineChart,
+      description: 'Available strategies',
+    },
+    {
+      name: 'Backtest History',
+      href: '/backtest-history',
+      icon: History,
+      description: 'Past backtests',
     },
     {
       name: 'Users',
